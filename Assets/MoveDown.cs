@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MoveDown : MonoBehaviour
 {
-    private float targetY = .53f; // Posição mínima do eixo Y
+    private float targetY = .62f; // Posição mínima do eixo Y
     public float moveSpeed; // Velocidade do movimento
     private Coroutine moveCoroutine = null; // Referência para a corrotina ativa
 
