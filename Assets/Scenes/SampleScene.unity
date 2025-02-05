@@ -5442,7 +5442,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 370894748}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 6379357374140567894}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -74.03}
 --- !u!23 &339475601574113874
 MeshRenderer:
@@ -19726,6 +19726,7 @@ Transform:
   - {fileID: 6379357374533367535}
   - {fileID: 6379357374262980152}
   - {fileID: 6379357375498740458}
+  - {fileID: 339224440893955999}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6379357374140567895
@@ -27297,11 +27298,10 @@ SceneRoots:
   - {fileID: 490811156859226520}
   - {fileID: 6379357374140567894}
   - {fileID: 9070514728497389624}
-  - {fileID: 1498957172}
-  - {fileID: 146213200}
-  - {fileID: 1255367294}
   - {fileID: 1270038120}
   - {fileID: 498931763}
+  - {fileID: 1255367294}
   - {fileID: 1987480753}
-  - {fileID: 339224440893955999}
+  - {fileID: 146213200}
+  - {fileID: 1498957172}
   - {fileID: 1064944829}
