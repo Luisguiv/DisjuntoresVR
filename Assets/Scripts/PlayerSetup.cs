@@ -1,3 +1,4 @@
+using Photon.Pun;
 using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 using static UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics.HapticsUtility;
 
-public class PlayerSetup : MonoBehaviour
+public class PlayerSetup : MonoBehaviourPun
 {
     public XROrigin xrOrigin;
     public CharacterController characterController;
@@ -41,6 +42,18 @@ public class PlayerSetup : MonoBehaviour
 
     public GameObject playerLocomotion;
 
+    void Start()
+    {
+        if (!photonView.IsMine)
+        {
+            // Desativa câmera e controle para outros jogadores
+            playerCamera.SetActive(false);
+            return;
+        }
+
+        IsLocalPlayer();
+    }
+
     public void IsLocalPlayer()
     {
         xrOrigin.enabled = true;
@@ -68,7 +81,7 @@ public class PlayerSetup : MonoBehaviour
 
         rightPokeInteractor.SetActive(true);
         rightNearFarInteractor.SetActive(true);
-        //rightTeleportInteractor.SetActive(true);
+        rightTeleportInteractor.SetActive(true);
         rightControllerVisual.enabled = true;
         rightControllerTeleportStabilizedOrigin.SetActive(true);
 

@@ -1,6 +1,7 @@
 using UnityEngine;
+using Photon.Pun;
 
-public class CleaningObject : MonoBehaviour
+public class CleaningObject : MonoBehaviourPun
 {
     public Material dirtyMaterial; // Material inicial (sujo)
     public Material cleanMaterial; // Material após limpeza
@@ -18,7 +19,10 @@ public class CleaningObject : MonoBehaviour
     {
         if (other.CompareTag(cleaningTag) && !isClean)
         {
-            StartCleaning();
+            if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC("StartCleaning", RpcTarget.AllBuffered);
+            }
         }
     }
 
@@ -36,10 +40,12 @@ public class CleaningObject : MonoBehaviour
         }
     }*/
 
+    [PunRPC]
     private void StartCleaning()
     {
+        if (isClean) return; // Evita chamadas desnecessárias
         isClean = true;
         meshRenderer.material = cleanMaterial;
-        Debug.Log("Objeto limpo!");
+        Debug.Log("Objeto limpo! Textura sincronizada para todos.");
     }
 }
