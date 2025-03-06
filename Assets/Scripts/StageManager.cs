@@ -22,6 +22,8 @@ public class StageManager : MonoBehaviour
     public GameObject piece_1;
     public GameObject piece_2;
 
+    public GameObject gameManager;
+
     void Start()
     {
         stage = 0;
@@ -49,6 +51,12 @@ public class StageManager : MonoBehaviour
             pieces_animator.Play("RemovePieces");
 
             stage = 4;
+        }
+
+        if(stage == 6)
+        {
+            gameManager.GetComponent<TrainingEndManager>().ShowCompletionPanel();
+            stage++;
         }
     }
 

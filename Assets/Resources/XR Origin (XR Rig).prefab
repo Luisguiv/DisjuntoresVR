@@ -832,6 +832,7 @@ MonoBehaviour:
   rightControllerVisual: {fileID: 5545423839822701111}
   rightControllerTeleportStabilizedOrigin: {fileID: 8510216655447750670}
   playerLocomotion: {fileID: 8462745955583465802}
+  helmetRenderer: {fileID: 1145611345533718227}
 --- !u!1 &6515301447984131943
 GameObject:
   m_ObjectHideFlags: 0
@@ -1637,6 +1638,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2105627586842003909}
   m_SourcePrefab: {fileID: 100100000, guid: cb76c9684c99c444ead6c47ab7c1871f, type: 3}
+--- !u!23 &1145611345533718227 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2639093111242290029, guid: cb76c9684c99c444ead6c47ab7c1871f, type: 3}
+  m_PrefabInstance: {fileID: 3132805775751593406}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1211915443090501704 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4298792418013023734, guid: cb76c9684c99c444ead6c47ab7c1871f, type: 3}
@@ -1660,7 +1666,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 4964504157459766580}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1708,7 +1715,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 8912681424890604403}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

@@ -9,6 +9,8 @@ public class CleaningObject : MonoBehaviourPun
     private MeshRenderer meshRenderer;
     private bool isClean = false;
 
+    public StageManager stageManager;
+
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
@@ -47,5 +49,7 @@ public class CleaningObject : MonoBehaviourPun
         isClean = true;
         meshRenderer.material = cleanMaterial;
         Debug.Log("Objeto limpo! Textura sincronizada para todos.");
+
+        stageManager.stage += 1;
     }
 }

@@ -1,10 +1,13 @@
+using Photon.Pun;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class SceneLoader : MonoBehaviour
+public class SceneLoader : MonoBehaviourPunCallbacks
 {
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single); // Modo Single remove a cena anterior automaticamente
+        if (PhotonNetwork.IsMasterClient) // Somente o Host (MasterClient) pode mudar a cena
+        {
+            PhotonNetwork.LoadLevel(sceneName);
+        }
     }
 }

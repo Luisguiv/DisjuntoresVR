@@ -42,6 +42,8 @@ public class PlayerSetup : MonoBehaviourPun
 
     public GameObject playerLocomotion;
 
+    public Renderer helmetRenderer;
+
     void Start()
     {
         if (!photonView.IsMine)
@@ -86,5 +88,13 @@ public class PlayerSetup : MonoBehaviourPun
         rightControllerTeleportStabilizedOrigin.SetActive(true);
 
         playerLocomotion.SetActive(true);
+    }
+
+    public void SetHelmetColor(Material helmetMaterial)
+    {
+        if (helmetRenderer != null)
+        {
+            helmetRenderer.material = helmetMaterial;
+        }
     }
 }
