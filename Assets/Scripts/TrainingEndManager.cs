@@ -9,6 +9,7 @@ public class TrainingEndManager : MonoBehaviourPun
     // Chamada quando o treinamento termina
     public void ShowCompletionPanel()
     {
+        trainingCompletePanel.SetActive(true);
         trainingCompletePanel.GetComponent<SyncActivation>().ToggleChildrenObjects(true);
     }
 
@@ -23,7 +24,7 @@ public class TrainingEndManager : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel("GIS");
+            PhotonNetwork.LoadLevel("GIS_After_T");
         }
     }
 }

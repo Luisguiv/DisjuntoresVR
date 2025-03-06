@@ -33,14 +33,17 @@ public class StageManager : MonoBehaviour
     {
         if (stage == 2)
         {
-            objectsToMoveUp[2].GetComponent<SyncActivation>().SetActiveState(true);
+            objectsToMoveUp[2].SetActive(true);
+            objectsToMoveUp[2].GetComponent<SyncActivation>().ActivateObject(objectsToMoveUp[2]);
+            
             MoveUp();
         }
 
         if (stage == 3)
         {
-            to_hide.GetComponent<SyncActivation>().SetActiveState(false);
-            to_show.GetComponent<SyncActivation>().SetActiveState(true);
+            to_hide.GetComponent<SyncActivation>().ToggleObject();
+            to_show.SetActive(true);
+            to_show.GetComponent<SyncActivation>().ActivateObject(to_show);
 
             piece_1.GetComponent<Rigidbody>().isKinematic = false;
             piece_1.GetComponent<Rigidbody>().useGravity = true;
@@ -110,7 +113,7 @@ public class StageManager : MonoBehaviour
 
         if (allSidewaysReached) // Apenas inicia MoveDownObj uma vez
         {
-            objectsToMoveUp[2].GetComponent<SyncActivation>().SetActiveState(false);
+            objectsToMoveUp[2].GetComponent<SyncActivation>().ToggleObject();
 
             stage = 3;
         }

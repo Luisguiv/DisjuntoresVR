@@ -3,16 +3,21 @@ using UnityEngine;
 
 public class SyncActivation : MonoBehaviourPun
 {
+    [PunRPC]
+    void SetObjectActive(bool state)
+    {
+        gameObject.SetActive(state);
+    }
+
     // Alterna o estado do próprio objeto
     public void ToggleObject()
     {
         photonView.RPC("SetObjectActive", RpcTarget.AllBuffered, !gameObject.activeSelf);
     }
 
-    [PunRPC]
-    void SetObjectActive(bool state)
+    public void PrintHello()
     {
-        gameObject.SetActive(state);
+        Debug.Log("Hello");
     }
 
     // Método público para ativar/desativar manualmente o próprio objeto
