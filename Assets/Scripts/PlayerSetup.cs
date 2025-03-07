@@ -49,12 +49,28 @@ public class PlayerSetup : MonoBehaviourPun
         if (!photonView.IsMine)
         {
             // Desativa câmera e controle para outros jogadores
-            playerCamera.SetActive(false);
+            //playerCamera.SetActive(false);
+            //leftController.SetActive(false);
+            //rightController.SetActive(false);
             return;
         }
 
         IsLocalPlayer();
     }
+
+    /*public void InitializeControllers()
+    {
+        if (photonView.IsMine)
+        {
+            leftController.SetActive(true);
+            rightController.SetActive(true);
+        }
+        else
+        {
+            leftController.SetActive(false);
+            rightController.SetActive(false);
+        }
+    }*/
 
     public void IsLocalPlayer()
     {

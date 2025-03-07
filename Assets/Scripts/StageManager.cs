@@ -35,10 +35,6 @@ public class StageManager : MonoBehaviourPun
                 photonView.RequestOwnership();
             }
 
-            // Ativar fita antes da animação
-            //objectsToMoveUp[2].SetActive(true);
-            //objectsToMoveUp[2].GetComponent<SyncActivation>().ActivateObject(objectsToMoveUp[2]);
-
             // Desativar Gancho e Acumulador
             objectsToMoveUp[0].GetComponent<SyncActivation>().DeactivateObject(objectsToMoveUp[0]);
             objectsToMoveUp[1].GetComponent<SyncActivation>().DeactivateObject(objectsToMoveUp[1]);
