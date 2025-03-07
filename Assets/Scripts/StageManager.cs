@@ -1,21 +1,18 @@
-using Unity.XR.CoreUtils;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using Photon.Pun;
 
-public class StageManager : MonoBehaviour
+public class StageManager : MonoBehaviourPun
 {
     public int stage;
 
-    public GameObject[] objectsToMoveUp; // Array de objetos a serem movidos para cima
-    public float[] targetYValues;
+    // Agora usamos animadores em vez de GameObjects para movimentacao
+    public Animator animatorToMoveUp;
+    public Animator animatorToMoveSideways;
 
-    public GameObject[] objectsToMoveSideways;
-    public float[] targetZValues;
-
-    public float moveSpeed = 1f; // Velocidade de movimento
-
-    public GameObject to_hide;
+    public GameObject[] objectsToMoveUp; // Para ativação dos objetos que precisam aparecer
     public GameObject to_show;
+    public GameObject to_show_2;
+    public GameObject to_show_3;
 
     public Animator strap_animator;
     public Animator pieces_animator;
@@ -33,30 +30,61 @@ public class StageManager : MonoBehaviour
     {
         if (stage == 2)
         {
-            objectsToMoveUp[2].SetActive(true);
-            objectsToMoveUp[2].GetComponent<SyncActivation>().ActivateObject(objectsToMoveUp[2]);
-            
-            MoveUp();
+            if (!photonView.IsMine)
+            {
+                photonView.RequestOwnership();
+            }
+
+            // Ativar fita antes da animação
+            //objectsToMoveUp[2].SetActive(true);
+            //objectsToMoveUp[2].GetComponent<SyncActivation>().ActivateObject(objectsToMoveUp[2]);
+
+            // Desativar Gancho e Acumulador
+            objectsToMoveUp[0].GetComponent<SyncActivation>().DeactivateObject(objectsToMoveUp[0]);
+            objectsToMoveUp[1].GetComponent<SyncActivation>().DeactivateObject(objectsToMoveUp[1]);
+
+            // Ativa MoveUp
+            to_show_2.SetActive(true);
+            to_show_2.GetComponent<SyncActivation>().ActivateObject(to_show_2);
+
+            photonView.RPC("RPC_PlayMoveUpAnimation", RpcTarget.AllBuffered);
         }
 
         if (stage == 3)
         {
-            to_hide.GetComponent<SyncActivation>().ToggleObject();
+            if (!photonView.IsMine)
+            {
+                photonView.RequestOwnership();
+            }
+
+            // Desativa MoveUp
+            to_show_2.GetComponent<SyncActivation>().DeactivateObject(to_show_2);
+
+            // Ativa MoveSideways
+            to_show_3.SetActive(true);
+            to_show_3.GetComponent<SyncActivation>().ActivateObject(to_show_3);
+
+            photonView.RPC("RPC_PlayMoveSidewaysAnimation", RpcTarget.AllBuffered);
+        }
+
+        if (stage == 4)
+        {
+            if (!photonView.IsMine)
+            {
+                photonView.RequestOwnership();
+            }
+
+            // Desativa MoveSideways
+            to_show_3.GetComponent<SyncActivation>().DeactivateObject(to_show_3);
+
+            // Ativa Acumulador Animado
             to_show.SetActive(true);
             to_show.GetComponent<SyncActivation>().ActivateObject(to_show);
 
-            piece_1.GetComponent<Rigidbody>().isKinematic = false;
-            piece_1.GetComponent<Rigidbody>().useGravity = true;
-            piece_2.GetComponent<Rigidbody>().isKinematic = false;
-            piece_2.GetComponent<Rigidbody>().useGravity = true;
-
-            strap_animator.Play("PutStrap");
-            pieces_animator.Play("RemovePieces");
-
-            stage = 4;
+            photonView.RPC("RPC_PlayAnimations", RpcTarget.AllBuffered);
         }
 
-        if(stage == 6)
+        if (stage == 7)
         {
             gameManager.GetComponent<TrainingEndManager>().ShowCompletionPanel();
             stage++;
@@ -73,49 +101,36 @@ public class StageManager : MonoBehaviour
         return stage;
     }
 
-    private void MoveUp()
+    // Inicia a animação de MoveUp para todos os objetos no Photon
+    [PunRPC]
+    private void RPC_PlayMoveUpAnimation()
     {
-        bool allReachedTarget = true;
+        animatorToMoveUp.Play("MoveUp");
 
-        for (int i = 0; i < objectsToMoveUp.Length; i++)
-        {
-            if (objectsToMoveUp[i].transform.position.y < targetYValues[i])
-            {
-                // Move cada objeto para sua altura final
-                float newY = Mathf.MoveTowards(objectsToMoveUp[i].transform.position.y, targetYValues[i], moveSpeed * Time.deltaTime);
-                objectsToMoveUp[i].transform.position = new Vector3(objectsToMoveUp[i].transform.position.x, newY, objectsToMoveUp[i].transform.position.z);
-
-                allReachedTarget = false; // Ainda há objetos se movendo para cima
-            }
-        }
-
-        // Quando todos os objetos atingirem suas respectivas alturas, inicia o movimento lateral
-        if (allReachedTarget)
-        {
-            MoveSideways();
-        }
+        stage = 3;
     }
 
-    private void MoveSideways()
+    // Inicia a animação de MoveSideways para todos os objetos no Photon
+    [PunRPC]
+    private void RPC_PlayMoveSidewaysAnimation()
     {
-        bool allSidewaysReached = true;
+        animatorToMoveSideways.Play("MoveSideways");
 
-        for (int i = 0; i < objectsToMoveSideways.Length; i++)
-        {
-            if (objectsToMoveSideways[i].transform.position.z < targetZValues[i])
-            {
-                float newZ = Mathf.MoveTowards(objectsToMoveSideways[i].transform.position.z, targetZValues[i], moveSpeed * Time.deltaTime);
-                objectsToMoveSideways[i].transform.position = new Vector3(objectsToMoveSideways[i].transform.position.x, objectsToMoveSideways[i].transform.position.y, newZ);
+        stage = 4;
+    }
 
-                allSidewaysReached = false;
-            }
-        }
+    // Sincroniza as animações no multiplayer
+    [PunRPC]
+    private void RPC_PlayAnimations()
+    {
+        piece_1.GetComponent<Rigidbody>().isKinematic = false;
+        piece_1.GetComponent<Rigidbody>().useGravity = true;
+        piece_2.GetComponent<Rigidbody>().isKinematic = false;
+        piece_2.GetComponent<Rigidbody>().useGravity = true;
 
-        if (allSidewaysReached) // Apenas inicia MoveDownObj uma vez
-        {
-            objectsToMoveUp[2].GetComponent<SyncActivation>().ToggleObject();
+        strap_animator.Play("PutStrap");
+        pieces_animator.Play("RemovePieces");
 
-            stage = 3;
-        }
+        stage = 5;
     }
 }

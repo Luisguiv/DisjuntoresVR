@@ -12,6 +12,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Connecting...");
         PhotonNetwork.ConnectUsingSettings();
+
+        PhotonNetwork.AutomaticallySyncScene = true; // Sincroniza a cena para todos
     }
 
     public override void OnConnectedToMaster()

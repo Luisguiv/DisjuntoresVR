@@ -3,9 +3,10 @@ using UnityEngine;
 public class MoveRight : MonoBehaviour
 {
     public Animator animator;
+    public GameObject transpalet;
 
     public void OnClick()
     {
-        animator.Play("MoveTranspalet");
+        transpalet.GetComponent<SyncAnimation>().PlayAnimation("MoveTranspalet");
     }
 }

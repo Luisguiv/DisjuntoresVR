@@ -1,49 +1,55 @@
-using System.Collections;
 using UnityEngine;
+using Photon.Pun;
 
-public class MoveDown : MonoBehaviour
+public class MoveDown : MonoBehaviourPun
 {
     private float targetY = .62f; // Posição mínima do eixo Y
     public float moveSpeed; // Velocidade do movimento
-    private Coroutine moveCoroutine = null; // Referência para a corrotina ativa
+    private bool isMoving = false; // Controle de movimento
 
     public StageManager stageManager;
 
-    public void StartMoveDown()
+    void Update()
     {
-        // Apenas inicia a corrotina se não houver uma em andamento
-        if (stageManager.GetStage() == 1 && transform.position.y != targetY && moveCoroutine == null)
+        if (isMoving)
         {
-            //Debug.Log(transform.position.y);
-            moveCoroutine = StartCoroutine(MoveDownCoroutine());
-        }
-    }
-
-    public void StopMoveDown()
-    {
-        // Para a corrotina em andamento, se existir
-        if (moveCoroutine != null)
-        {
-            StopCoroutine(moveCoroutine);
-            moveCoroutine = null; // Reseta a referência
-        }
-    }
-
-    private IEnumerator MoveDownCoroutine()
-    {
-        while (transform.position.y > targetY)
-        {
-            // Calcula a nova posição de Y de forma suave
-            float newY = Mathf.MoveTowards(transform.position.y, targetY, moveSpeed * Time.deltaTime);
+            float newY = Mathf.Lerp(transform.position.y, targetY, moveSpeed * Time.deltaTime);
             transform.position = new Vector3(transform.position.x, newY, transform.position.z);
 
-            yield return null; // Aguarda o próximo frame
+            // Sincroniza apenas quando está perto do destino
+            if (Mathf.Abs(transform.position.y - targetY) < 0.01f)
+            {
+                isMoving = false;
+                photonView.RPC("RPC_SyncPosition", RpcTarget.AllBuffered, transform.position);
+                stageManager.SetStage(2);
+            }
         }
-        if (transform.position.y == targetY)
-        {
-            stageManager.SetStage(2);
-        }
+    }
 
-        moveCoroutine = null; // Reseta a referência quando o movimento termina
+    public void StartMoveDown()
+    {
+        if(stageManager.stage == 1)
+        {
+            // Solicita a propriedade do objeto antes de iniciar o movimento
+            if (!photonView.IsMine)
+            {
+                photonView.RequestOwnership();
+            }
+
+            // Agora qualquer jogador pode chamar este RPC
+            photonView.RPC("RPC_StartMoveDown", RpcTarget.AllBuffered);
+        }
+    }
+
+    [PunRPC]
+    void RPC_StartMoveDown()
+    {
+        isMoving = true;
+    }
+
+    [PunRPC]
+    void RPC_SyncPosition(Vector3 newPosition)
+    {
+        transform.position = newPosition;
     }
 }
