@@ -7,11 +7,14 @@ using UnityEngine.XR;
 public class RadialSelection : MonoBehaviour
 {
 
-   // Usando XR Input para capturar a entrada do controlador
-    public XRNode inputSource = XRNode.RightHand;  // Ou LeftHand, dependendo de qual controlador você deseja monitorar
-    private InputDevice device;
+    // Usando XR Input para capturar a entrada do controlador
+    // public XRNode leftInputSource = XRNode.LeftHand; // Mão esquerda
+    // public XRNode rightInputSource = XRNode.RightHand; // Mão direita
+    // private InputDevice leftDevice;
+    // private InputDevice rightDevice;
 
-    // public OVRInput.Button spawnBotton;
+    public XRNode inputSource = XRNode.RightHand;  // Ou LeftHand
+    private InputDevice device;
 
     [Range(2,10)]
     public int numerOfRadialPart;
@@ -28,33 +31,49 @@ public class RadialSelection : MonoBehaviour
     void Start()
     {
         // Inicializa o dispositivo do controlador no início
+        // leftDevice = InputDevices.GetDeviceAtXRNode(leftInputSource);
+        // rightDevice = InputDevices.GetDeviceAtXRNode(rightInputSource);
+
         device = InputDevices.GetDeviceAtXRNode(inputSource);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // // Verifica se o botão de spawn foi pressionado
-        // if (device.TryGetFeatureValue(CommonUsages.primaryButton, out bool primaryButtonPressed) && primaryButtonPressed)
+        // Verifica se o botão da mão esquerda foi pressionado para abrir o menu
+        // if (leftDevice.TryGetFeatureValue(CommonUsages.primaryButton, out bool leftPrimaryButtonPressed) && leftPrimaryButtonPressed)
         // {
-        //     SpawnRadialPart();
+        //     Debug.Log("Left Primary Button Pressed!");
+        //     SpawnRadialPart(); // Mostra o Pie Menu
         // }
 
-        // // Verifica se o botão primário ainda está pressionado
-        // if (device.TryGetFeatureValue(CommonUsages.primaryButton, out bool isPressed) && isPressed)
+        // // Verifica se o botão da mão direita está pressionado para selecionar uma parte
+        // if (rightDevice.TryGetFeatureValue(CommonUsages.primaryButton, out bool rightPrimaryButtonPressed) && rightPrimaryButtonPressed)
         // {
-        //     GetSelectedRadialPart();
+        //     GetSelectedRadialPart(); // Seleciona a parte do Pie Menu
         // }
 
-        // // Verifica se o botão foi solto
-        // if (device.TryGetFeatureValue(CommonUsages.primaryButton, out bool buttonReleased) && !buttonReleased)
+        // // Verifica se o botão foi solto para esconder o menu e disparar o evento de seleção
+        // if (rightDevice.TryGetFeatureValue(CommonUsages.primaryButton, out bool rightButtonReleased) && !rightButtonReleased)
         // {
-        //     HideAndTriggerSelected();
+        //     HideAndTriggerSelected(); // Esconde o menu e dispara a seleção
         // }
 
-        SpawnRadialPart();
-        GetSelectedRadialPart();
+        //SpawnRadialPart();
+        //GetSelectedRadialPart();
         //HideAndTriggerSelected();
+
+        if (device.isValid)
+        {
+            if (device.TryGetFeatureValue(CommonUsages.primaryButton, out bool primaryButtonPressed) && primaryButtonPressed)
+            {
+                Debug.Log("Primary Button Pressed!");
+            }
+        }
+        else
+        {
+            Debug.Log("Device is not valid!");
+        }
     }
 
     public void HideAndTriggerSelected()
@@ -67,17 +86,22 @@ public class RadialSelection : MonoBehaviour
         Vector3 centerToHand = handTransform.position - radialPartCanvas.position;
         Vector3 centerToHandProject = Vector3.ProjectOnPlane(centerToHand, radialPartCanvas.forward);
 
-        float angle = Vector3.SignedAngle(radialPartCanvas.up, centerToHandProject, -radialPartCanvas.forward);
+        // Calcule o ângulo entre a direção do Canvas e a direção da mão
+        float angle = Vector3.SignedAngle(radialPartCanvas.up, -centerToHandProject, radialPartCanvas.forward);
 
+        // Inverta o ângulo para corrigir o problema da seleção invertida
         if (angle < 0)
             angle += 360;
 
-        // Ajusta para garantir que o valor de angle seja usado corretamente
+        angle = 360 - angle;
+
+        // Ajuste o cálculo do índice de seleção radial
         currentSelectedRadialPart = Mathf.FloorToInt(angle * numerOfRadialPart / 360);
 
         Debug.Log("Angle: " + angle);
         Debug.Log("Selected Radial Part Index: " + currentSelectedRadialPart);
 
+        // Atualize as partes selecionadas
         for (int i = 0; i < numerOfRadialPart; i++)
         {
             if (i == currentSelectedRadialPart)
@@ -93,11 +117,12 @@ public class RadialSelection : MonoBehaviour
         }
     }
 
+
     public void SpawnRadialPart()
     {
-        // radialPartCanvas.gameObject.SetActive(true);
-        // radialPartCanvas.position = handTransform.position;
-        // radialPartCanvas.rotation = handTransform.rotation;
+        radialPartCanvas.gameObject.SetActive(true);
+        radialPartCanvas.position = handTransform.position;
+        radialPartCanvas.rotation = handTransform.rotation;
 
         foreach (var item in spawnedParts)
         {
@@ -108,7 +133,7 @@ public class RadialSelection : MonoBehaviour
 
         for(int i = 0; i < numerOfRadialPart; i++)
         {
-            float angle = - i * 360 / numerOfRadialPart - angleBetweenPart/2;
+            float angle =  - i * 360 / numerOfRadialPart - angleBetweenPart/2;
             Vector3 radialPartEulerAngle = new Vector3(0, 0, angle);
 
             GameObject spawnedRadialPart = Instantiate(radialPartPrefab, radialPartCanvas);
