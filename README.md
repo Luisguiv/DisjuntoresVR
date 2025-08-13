@@ -6,7 +6,8 @@ Este repositório contém o código-fonte, modelos e documentação relacionados
 > Autor: **Luis Guilherme Vosgerau Baroni**  
 > Curso de Ciência da Computação — Unioeste (Foz do Iguaçu)  
 > Ano: **2024**
-> [Acesse o TCC completo em PDF](tcc.pdf)
+
+[Acesse o TCC completo em PDF](tcc.pdf)
 
 ***
 
