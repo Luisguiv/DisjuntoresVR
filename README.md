@@ -6,10 +6,11 @@ Este repositório contém o código-fonte, modelos e documentação relacionados
 > Autor: **Luis Guilherme Vosgerau Baroni**  
 > Curso de Ciência da Computação — Unioeste (Foz do Iguaçu)  
 > Ano: **2024**
+> [Acesse o TCC completo em PDF](tcc.pdf)
 
 ***
 
-## 📜 Resumo do Projeto
+## Resumo do Projeto
 
 A realidade virtual (RV) e o conceito de **metaverso** vêm se mostrando ferramentas promissoras para treinamento e capacitação, especialmente em setores industriais e de alta complexidade.
 
@@ -26,7 +27,7 @@ O sistema foi implementado utilizando:
 
 ***
 
-## 🎯 Objetivos
+## Objetivos
 
 - **Desenvolver** uma plataforma de metaverso com suporte a treinamento imersivo.
 - **Implementar** cenários interativos que permitam a colaboração entre **tutores** e **trainees**.
@@ -35,7 +36,7 @@ O sistema foi implementado utilizando:
 
 ***
 
-## 🛠 Funcionalidades Principais
+## Funcionalidades Principais
 
 - Lobby virtual para seleção de treinamentos e papéis (tutor ou trainee)
 - Locomoção por:
@@ -51,7 +52,7 @@ O sistema foi implementado utilizando:
 
 ***
 
-## 📊 Resultados
+## Resultados
 
 - **Usabilidade (SUS)**: média de **68,21** – considerada boa em relação à média mundial.
 - **Conforto (SSQ)**: sintomas leves de cinetose na maioria dos participantes.
